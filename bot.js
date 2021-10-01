@@ -57,13 +57,13 @@ function switchUnits(rank1, rank2) {
 function nameUnit(rank, name) {
   if(rank === undefined || name === undefined) throw 'Both an Initiative Slot and Character Name must be specified.';
   if(Number.isNaN(Number.parseInt(rank, 10))) throw 'Intiative slot must be an integer.';
-  if(rank <= 0 || rank > initiative_table.length) throw 'Invalid character specified. Initiative slot specified exceeds length of initiative order.';
+  if(rank <= 0 || rank > initiative_table.length) throw 'Invalid character specified. Initiative slot specified exceeds length of initiative order. Did you mean to use $add?';
 
   initiative_table[rank - 1].name = name;
 }
 
 function format_order() {
-  if(initiative_table.length < 1) throw 'Initiative Order is Empty.';
+  if(initiative_table.length < 1) throw 'Initiative Order is Empty. Use $add to add a character to initiative.';
 
   var embed = new Discord.RichEmbed();
 
