@@ -6,10 +6,14 @@ const config = require('./config.json');
 var initiative_table = [];
 
 function addUnit(name, roll) {
+  for (var i = 0; i < initiative_table.length; i++) {
+    if(name === initiative_table[i].name) throw 'Character already exists.';
+  }
+  
   if(name === undefined || roll === undefined) throw 'Both a character name and Initiative Roll are required.';
-  arr = roll.split("T");
-  sucadv = parseFloat(arr[0]);
-  tri = parseFloat(arr[1]);
+    arr = roll.split("T");
+    sucadv = parseFloat(arr[0]);
+    tri = parseFloat(arr[1]);
   if(Number.isNaN(Number.parseInt(sucadv, 10))) throw 'Initiative Roll must be in format success.advantageTtriumph.';
 
   var player = {
@@ -18,6 +22,8 @@ function addUnit(name, roll) {
     'sucadv': sucadv,
     'tri': tri
   };
+    
+  
   initiative_table.push(player);
 
   //sort initiative_table
@@ -134,7 +140,7 @@ client.on("message", (message) => {
       case 'switch':
         try {
           switchUnits(args[0], args[1]);
-          sendTempMessage("Unit order switched.", channel);
+          sendTempMessage("Initiative order switched.", channel);
         } catch (e) {
           console.log(e);
           message.author.send(e);
@@ -144,7 +150,7 @@ client.on("message", (message) => {
       case 'name':
         try {
           nameUnit(args[0], args.slice(1).join(' '));
-          sendTempMessage("Unit renamed.", channel);
+          sendTempMessage("Character renamed.", channel);
         } catch (e) {
           console.log(e);
           message.author.send(e);
