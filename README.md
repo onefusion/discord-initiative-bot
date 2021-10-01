@@ -1,6 +1,5 @@
-# Initiative Bot for Discord
+# Initiative Bot for Discord for FFG SWRPG Tabletop
 - This is a fork of AntFay's original work, Initiative Bot for Discord.
-Discord bot script for tracking turn order in Tabletop RPGs
 - This fork specifically updates the bot to include syntax for Fantasy Flight Games' Star Wars Tabletop RPG line
 
 ## Commands
