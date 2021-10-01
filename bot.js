@@ -182,8 +182,18 @@ client.on("message", (message) => {
         initiative_table = [];
         deleteMessage(message);
         break;
-    }
-
+      case 'help':
+        try { 
+          var embed = new Discord.RichEmbed();
+          help_text = '$add [name] [initiative] - add a char to the initiative order.\nNote: initiative should be entered as success.advantageTtriumph (such as 3.2T1).\n$order - shows current iniative order.\n$remove [rank] - remove a char from the specified rank in initiative (initiative slot).\n$switch [rank1] [rank2] - swaps chars at specified ranks.\n$name [rank] [new name] - renames a char at the specified rank in initiative.\n$reset - clears the initiative table.\n$help - shows available commands for the bot.\n';
+          embed.addField('Available Bot Commands', help_text);
+          message.channel.send(embed);
+        } catch (e) {
+          console.log(e);
+          message.author.send(e);
+        }
+        break;
+      }
   }
 });
 
