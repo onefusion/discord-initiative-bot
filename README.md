@@ -10,6 +10,7 @@
 - **$switch [rank 1] [rank 2]** - swaps chars at specified ranks
 - **$name [rank] [new name]** - renames a char at the specified rank in initiative
 - **$reset** - clears the initiative table
+- **$help** - embeds list of bot commands (set it the code, not here)
 
 ## Setup
 
