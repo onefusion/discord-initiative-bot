@@ -13,7 +13,12 @@ function addUnit(name, roll) {
   if(name === undefined || roll === undefined) throw 'Both a character name and Initiative Roll are required.';
     arr = roll.split("T");
     sucadv = parseFloat(arr[0]);
-    tri = parseFloat(arr[1]);
+    if(arr[1] === undefined) {
+      tri=0;
+    }
+    else {
+      tri = parseFloat(arr[1]);
+    }
   if(Number.isNaN(Number.parseInt(sucadv, 10))) throw 'Initiative Roll must be in format success.advantageTtriumph.';
 
   var player = {
@@ -29,10 +34,17 @@ function addUnit(name, roll) {
   //sort initiative_table
   initiative_table.sort((a, b) => {
     var diffSucAdv = b.sucadv - a.sucadv
-    if(diffSucAdv == 0) {
+    var diffTri = b.tri - a.tri
+    
+    if(diffSucAdv == 0 && diffTri == 0) {
       return Math.random() < 0.5 ? -1 : 1;
     }
-    return diffSucAdv;
+    else if (diffSucAdv == 0) {
+      return diffTri;
+    }
+    else {
+      return diffSucAdv;
+    }
   });
 }
 
