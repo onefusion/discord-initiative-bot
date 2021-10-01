@@ -1,5 +1,7 @@
 # Initiative Bot for Discord
+- This is a fork of AntFay's original work, Initiative Bot for Discord.
 Discord bot script for tracking turn order in Tabletop RPGs
+- This fork specifically updates the bot to include syntax for Fantasy Flight Games' Star Wars Tabletop RPG line
 
 ## Commands
 - Initiative always entered in syntax: success.advantageTtriumph, if no triumph on roll then success.advantage is sufficient
@@ -20,3 +22,10 @@ Discord bot script for tracking turn order in Tabletop RPGs
 5. Change `config.json.example` in the project directory to `config.json`, and add your discord application's auth token from your bot's application page.
 6. Run `npm install` in the main project directory.
 7. Run `node bot.js` to start the bot.
+
+## To Do
+~~- Update $add command to throw error if name matches existing character name in order~~
+- Add update command to update initiative of existing char
+- Add help command to display commands and initiative syntax
+- Update Windows install steps, as there is more involved related to setting up the bot Discord-side
+~~- Add credit to original author, AntFay, where appropriate~~
