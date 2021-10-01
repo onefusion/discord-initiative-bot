@@ -28,3 +28,4 @@
 - Add update command to update initiative of existing char
 - Add help command to display commands and initiative syntax
 - Update Windows install steps, as there is more involved related to setting up the bot Discord-side
+- Add logic to handle multiple servers and channels maintaining separate lists
