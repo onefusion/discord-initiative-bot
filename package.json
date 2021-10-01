@@ -1,9 +1,9 @@
 {
-  "name": "initiative-bot",
-  "version": "1.0.0",
-  "description": "Discord bot for tracking initiative and other D&D utilities.",
+  "name": "init-bot",
+  "version": "1.0.1",
+  "description": "Simple discord bot for tracking initiative in FFG SWRPG series.",
   "main": "bot.js",
-  "author": "tonyf",
+  "author": "seanr",
   "dependencies": {
     "discord.js": "^11.4.0"
   },
