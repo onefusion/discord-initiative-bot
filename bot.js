@@ -13,11 +13,11 @@ let records = {
 
 function addUnit(name, roll, currchan) {
   // This function adds a character to the initiative order, if it exists  
-  if(name === undefined || roll === undefined) throw 'Both a character name and initiative roll are required.';
+  if (name === undefined || roll === undefined) throw 'Both a character name and initiative roll are required.';
     arr = roll.split(".");
     suc = parseInt(arr[0]);
     adv = parseInt(arr[1]);
-    if(arr[2] === undefined) {
+    if (arr[2] === undefined) {
       tri=0;
     }
     else {
@@ -31,13 +31,13 @@ function addUnit(name, roll, currchan) {
       'tri': tri
     };
   
-  if(Number.isNaN(Number.parseInt(suc)) || Number.isNaN(Number.parseInt(adv))) throw 'Initiative must be in format success.advantage.triumph.';
+  if (Number.isNaN(Number.parseInt(suc)) || Number.isNaN(Number.parseInt(adv))) throw 'Initiative must be in format success.advantage.triumph.';
   else {
-    if(currchan in records){
+    if (currchan in records){
       for (id in records) {
-        if(id == currchan) {
-          if(records.id.init.length > 0) {
-            if(records.id.init.name == name) throw 'A character with that name already exists in the initiative order.'
+        if (id == currchan) {
+          if (records.id.init.length > 0) {
+            if (records.id.init.name == name) throw 'A character with that name already exists in the initiative order.'
           } else {
             records.id.init.push(char);
           }
@@ -46,21 +46,21 @@ function addUnit(name, roll, currchan) {
     }
     else {
       records.id = currchan;
-      console.log (records.id)
+      console.log (records.id);
       //records.id.init.push(char);
     }
   }
 
 
 //add order initiative function call  
-initorder(currchan);
+initOrder(currchan);
 }
   
-function initorder(currchan) {
+function initOrder(currchan) {
 //sort initiative_table
   for (id in records) {
-    if(id == currchan) {
-      if(!records.id.init.length){
+    if (id == currchan) {
+      if (!records.id.init.length){
         throw 'Unable to sort initiative table because initiative order is empty. Try using $add to add a character.'
       } else {
           records.id.init.sort((a, b) => {
@@ -69,7 +69,7 @@ function initorder(currchan) {
             var diffAdv = b.adv - a.adv
             var diffTri = b.tri - a.tri
   
-            if(diffSuc == 0 && diffAdv == 0 && diffTri == 0) {
+            if (diffSuc == 0 && diffAdv == 0 && diffTri == 0) {
               return Math.random() < 0.5 ? -1 : 1;
             }
             else if (diffAdv == 0) {
@@ -88,17 +88,17 @@ function initorder(currchan) {
 }
 
 function removeUnit(rank, currchan) {
-  if(rank === undefined || Number.isNaN(Number.parseInt(rank, 10))) throw 'Initiative slot as an integer is required.';
-  if(rank <= 0 || rank > chan.char.initiative_table.length) throw 'Invalid char specified. Initiative slot specified exceeds length of initiative order.';
+  if (rank === undefined || Number.isNaN(Number.parseInt(rank, 10))) throw 'Initiative slot as an integer is required.';
+  if (rank <= 0 || rank > chan.char.initiative_table.length) throw 'Invalid char specified. Initiative slot specified exceeds length of initiative order.';
 
   return initiative_table.splice(rank-1, 1);
 }
 
 function switchUnits(rank1, rank2) {
-  if(rank1 === undefined || rank2 === undefined) throw 'Two initiative slots must be specified to switch.';
-  if(Number.isNaN(Number.parseInt(rank1, 10)) || Number.isNaN(Number.parseInt(rank2, 10))) throw 'Initiative slots must be integers.';
-  if(rank1 <= 0 || rank1 > initiative_table.length) throw 'Invalid first initiative slot specified. Initiative slot specified exceeds length of initiative order.';
-  if(rank2 <= 0 || rank2 > initiative_table.length) throw 'Invalid second initiative slot specified. Initiative slot specified exceeds length of initiative order.';
+  if (rank1 === undefined || rank2 === undefined) throw 'Two initiative slots must be specified to switch.';
+  if (Number.isNaN(Number.parseInt(rank1, 10)) || Number.isNaN(Number.parseInt(rank2, 10))) throw 'Initiative slots must be integers.';
+  if (rank1 <= 0 || rank1 > initiative_table.length) throw 'Invalid first initiative slot specified. Initiative slot specified exceeds length of initiative order.';
+  if (rank2 <= 0 || rank2 > initiative_table.length) throw 'Invalid second initiative slot specified. Initiative slot specified exceeds length of initiative order.';
 
   var temp = initiative_table[rank1 - 1];
   initiative_table[rank1 - 1] = initiative_table[rank2 - 1];
@@ -106,15 +106,15 @@ function switchUnits(rank1, rank2) {
 }
 
 function nameUnit(rank, name) {
-  if(rank === undefined || name === undefined) throw 'Both an Initiative Slot and Character Name must be specified.';
-  if(Number.isNaN(Number.parseInt(rank, 10))) throw 'Intiative slot must be an integer.';
-  if(rank <= 0 || rank > initiative_table.length) throw 'Invalid character specified. Initiative slot specified exceeds length of initiative order. Did you mean to use $add?';
+  if (rank === undefined || name === undefined) throw 'Both an Initiative Slot and Character Name must be specified.';
+  if (Number.isNaN(Number.parseInt(rank, 10))) throw 'Intiative slot must be an integer.';
+  if (rank <= 0 || rank > initiative_table.length) throw 'Invalid character specified. Initiative slot specified exceeds length of initiative order. Did you mean to use $add?';
 
   initiative_table[rank - 1].name = name;
 }
 
 function format_order(currchan) {
-  if(initiative_table.length < 1) throw 'Initiative Order is Empty. Use $add to add a character to initiative.';
+  if (initiative_table.length < 1) throw 'Initiative Order is Empty. Use $add to add a character to initiative.';
 
   var embed = new Discord.RichEmbed();
 
@@ -134,7 +134,7 @@ function format_order(currchan) {
 function resetInit(currchan) {
   console.log(records[currchan].init);
   records[currchan].init.push("test");
-  if(records[currchan].init == []) {throw 'Current channel does not have an initiative order. Try the $add command to add characters to initiative.'
+  if (records[currchan].init == []) {throw 'Current channel does not have an initiative order. Try the $add command to add characters to initiative.'
   }
   else { console.log(records[currchan].init); }
 }
