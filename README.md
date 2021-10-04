@@ -14,7 +14,7 @@
 
 ## Setup
 
-### Windows
+### Windows - Needs updating
 1. Install [node.js] (https://nodejs.org/en/)
 2. Clone the project in desired folder: `git clone https://github.com/AntFay/discord-initiative-bot.git`
 3. Alternatively, use the green download button at the top of the page to download a zip folder containing the project files.
