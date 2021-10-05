@@ -5,18 +5,21 @@ const db = require('./database.js');
 
 const client = new Discord.Client();
 
-// Creates the base Records Schema format
-let recordSchema = new mongoose.Schema({
-    channel: {
-        type: String,
-        required: true
-    },
-    init_table: {
-        type: Array
-    }
-})
+function dbCreateSchema() {// Creates the base Records Schema format
+    let recordSchema = new mongoose.Schema({
+        channel: {
+            type: String,
+            required: true
+        },
+        init_table: {
+            type: Array
+        }
+    })
 
-recordTable=mongoose.model('records', recordSchema);
+    recordTable=mongoose.model('records', recordSchema);
+}
+
+
 
 // Add a character to the initiative list
 function addChar(currchan, name, roll) {
@@ -42,5 +45,7 @@ function findChannel(currchan){
     console.log(db.collection('records').findOne({channel: currchan}), currchan);       
 }
 
+
+dbCreateSchema();
 addChar(1, 'xzee', '3.2.1');
 
