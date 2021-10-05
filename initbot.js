@@ -23,7 +23,6 @@ function dbCreateSchema() {// Creates the base Records Schema format
 
 // Add a character to the initiative list
 function addChar(currchan, name, roll) {
-    console.log(currchan,name,roll);
     findChannel(currchan);
     
     let char = {
@@ -45,7 +44,5 @@ function findChannel(currchan){
     console.log(db.collection('records').findOne({channel: currchan}), currchan);       
 }
 
-
-dbCreateSchema();
 addChar(1, 'xzee', '3.2.1');
 

@@ -1,7 +1,18 @@
 const Discord = require('discord.js');
 const config = require('./config.json');
 const client = new Discord.Client();
+let mongoose = require('mongoose');
 
+mongoose.connect('mongodb://localhost:27017/')
+
+const RecordsSchema = new mongoose.Schema({
+  id: String,
+  init: [],
+  init_type: {
+    type: String,
+    default: 'swffg'
+  }
+});
 
 let init = [];
 let records = {
@@ -46,7 +57,7 @@ function addUnit(name, roll, currchan) {
     }
     else {
       records.id = currchan;
-      console.log (records.id);
+      console.log(records.id);      ;
       //records.id.init.push(char);
     }
   }
