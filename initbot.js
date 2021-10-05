@@ -36,10 +36,14 @@ function addChar(currchan, name, roll) {
             channel: currchan,
             init_table: char
         })        
-    } else { // if current channel found in db collection, then pull the record, set local init to record's init_table, push char object to init_table, and then update the record in the db collection
+    } else { // current channel is found in db collection -- pull record
         let record = db.collection('records').findOne({channel: currchan})
+        
+        // set local init to record's init_table and push char object to local init
         let init = record.init_table
         init.push(char)
+        
+        // and then update the record's init_table in the db collection
         db.collection('records').updateOne({channel: currchan},
             { 
                 $set: {init_table: init}})
