@@ -19,6 +19,8 @@ function dbCreateSchema() {// Creates the base Records Schema format
     recordTable=mongoose.model('records', recordSchema);
 }
 
+
+
 // Add a character to the initiative list
 async function addChar(currchan, name, roll) {
     
@@ -37,14 +39,34 @@ async function addChar(currchan, name, roll) {
             $set: {channel: currchan, init_table: roll}}
         )
     // if current channel not found in db collection, then create record for channel in db collection
+    
+    /*      ------------------------------------------------------------------------------------------------------------------
+            findChannel
+
+            Would it make sense to move this bit to a bot or channel initialization? 
+            We'd want to be sure the channel record exists no matter which command is first. 
+
+
+            Also, is findChannel a discord function or one you wrote? I don't see it in the code here. 
+          ------------------------------------------------------------------------------------------------------------------*/
     if (!findChannel(currchan)) {
         await db.collection('records').insertOne({
             channel: currchan,
             init_table: char
         })        
+    /*      ------------------------------------------------------------------------------------------------------------------
+            If we move the above bit to a separate function for initialization, we don't need this wrapped in an else
+          ------------------------------------------------------------------------------------------------------------------*/
+          
     } else { // current channel is found in db collection -- pull record
         let record = await db.collection('records').findOne({channel: currchan})
         console.log(record)
+/*      ------------------------------------------------------------------------------------------------------------------
+            Also, the next step before just pushing the character should be to check the existing table to see if it has 
+                the character already. If it already has the character, do we give a message to say that character is already 
+                in the list, and the update command should be used? 
+          ------------------------------------------------------------------------------------------------------------------*/
+
         // set local init to record's init_table and push char object to local init
           record.init_table.push(char)
         
