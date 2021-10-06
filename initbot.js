@@ -83,7 +83,7 @@ async function addChar(currchan, name, roll) {
 // Search record for currchan
 async function findChannel(currchan) {
 
-    if (db.collection('records').findOne({channel: currchan}).exec() === null) {
+    if (await db.collection('records').findOne({channel: currchan}).exec() === null) {
         return false;
     }
     else {
