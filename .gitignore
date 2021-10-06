@@ -4,3 +4,4 @@ npm-debug.log
 config.json
 package-lock.json
 package.json
+.vscode/launch.json
