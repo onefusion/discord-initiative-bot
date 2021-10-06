@@ -59,17 +59,17 @@ async function addChar(currchan, name, roll) {
             If we move the above bit to a separate function for initialization, we don't need this wrapped in an else
           ------------------------------------------------------------------------------------------------------------------*/
           
-    } else { // current channel is found in db collection -- pull record
+    } else { // current channel is found in db collection -- pull record and set init to init_table
         let init = await db.collection('records').findOne({channel: currchan}, "init_table").exec();
-        console.log(record)
+        console.log(init)
 /*      ------------------------------------------------------------------------------------------------------------------
             Also, the next step before just pushing the character should be to check the existing table to see if it has 
                 the character already. If it already has the character, do we give a message to say that character is already 
                 in the list, and the update command should be used? 
           ------------------------------------------------------------------------------------------------------------------*/
 
-        // set local init to record's init_table and push char object to local init
-          record.init_table.push(char)
+        // push char object to local init
+          init.push(char)
         
         // and then update the record's init_table in the db collection
         await db.collection('records').findOneAndUpdate({channel: currchan},
