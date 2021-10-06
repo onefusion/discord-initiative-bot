@@ -30,7 +30,7 @@ async function addChar(currchan, name, roll) {
         'roll': roll
     }
     
-    await db.collection('records').findOneAndUpdate({channel: currchan},
+    /**await db.collection('records').findOneAndUpdate({channel: currchan},
         {
             $get: {init_table}
            },
@@ -38,6 +38,7 @@ async function addChar(currchan, name, roll) {
         {           
             $set: {channel: currchan, init_table: roll}}
         )
+    **/
     // if current channel not found in db collection, then create record for channel in db collection
     
     /*      ------------------------------------------------------------------------------------------------------------------
@@ -53,13 +54,13 @@ async function addChar(currchan, name, roll) {
         await db.collection('records').insertOne({
             channel: currchan,
             init_table: char
-        })        
+        }).exec();        
     /*      ------------------------------------------------------------------------------------------------------------------
             If we move the above bit to a separate function for initialization, we don't need this wrapped in an else
           ------------------------------------------------------------------------------------------------------------------*/
           
     } else { // current channel is found in db collection -- pull record
-        let record = await db.collection('records').findOne({channel: currchan})
+        let init = await db.collection('records').findOne({channel: currchan}, "init_table").exec();
         console.log(record)
 /*      ------------------------------------------------------------------------------------------------------------------
             Also, the next step before just pushing the character should be to check the existing table to see if it has 
@@ -75,11 +76,20 @@ async function addChar(currchan, name, roll) {
             { 
                 $set: {init_table: init}
             }
-        )
+        ).exec();
     } 
 }
 
 // Search record for currchan
+async function findChannel(currchan) {
+
+    if (db.collection('records').findOne({channel: currchan}).exec() === null) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 
 addChar(1001, 'xzee', '3.2.1');
 addChar(1001, 'skye', '3.0');
