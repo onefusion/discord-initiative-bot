@@ -82,6 +82,11 @@ function debugmsg(msg) {
     }
 }
 
+//This function can toggle the debug mode variable. Ternary operator to simplify the statement. 
+function toggleDebug() {
+    debug = debug ? false : true;
+}
+
 debug = true;
 addChar(1001, 'xzee', '3.2.1');
 addChar(1001, 'skye', '3.0');
