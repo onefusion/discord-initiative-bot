@@ -24,7 +24,7 @@ async function addChar(currchan, name, roll) {
 
         await record.save(function (err, doc){
             if (err) console.error(err)
-            console.log(doc)
+                debugmsg(doc)
         })       
     /*    ------------------------------------------------------------------------------------------------------------------
             If we move the above bit to a separate function for initiativeialization, we don't need this wrapped in an else
@@ -40,7 +40,7 @@ async function addChar(currchan, name, roll) {
         if (record.initiative.name == name) {
             // update character's roll
             record.initiative.roll = roll
-            console.log(record)
+            debugmsg(record)
         }
         else {  // sets char object to name and roll
             let char = {
@@ -50,13 +50,13 @@ async function addChar(currchan, name, roll) {
 
             // push char to record
             record.initiative.push(char)
-            console.log(record)
+            debugmsg(record)
         }
 
         // and then save the updated record
         await record.save(function (err, doc){
             if (err) console.error(err)
-            console.log(doc)
+            debug.msg(doc)
         })    
     }    
 }
@@ -64,16 +64,23 @@ async function addChar(currchan, name, roll) {
 // Search record for currchan
 async function findChannel(currchan) {
     if (await db.collection('Record').findOne({channel: currchan}) === null) {
-        console.log('channel not found')
+        debugmsg('channel not found')
         return false;
     }
     else {
-        console.log('channel found')
+        debugmsg('channel found')
         let record = await db.collection('Record').findOne({channel: currchan})
         return record;
     }
 }
 
+function debugmsg(msg) {
+    if (debug) {
+        console.log(msg)
+    }
+}
+
+debug = true;
 addChar(1001, 'xzee', '3.2.1');
 addChar(1001, 'skye', '3.0');
 //addChar(1001, 'zakar', '3.1.1');
