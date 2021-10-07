@@ -59,7 +59,7 @@ async function addChar(currchan, name, roll) {
         // and then save the updated record
         await record.save(function (err, doc){
             if (err) console.error(err)
-            debug.msg(doc)
+            debugmsg(doc)
         })    
     }    
 }
