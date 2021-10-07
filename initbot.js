@@ -6,7 +6,7 @@ const Record = require('./models/Record');
 
 const client = new Discord.Client();
 
-var debug = true; //Set if debug mode is active or inactive
+let debug = true; //Set if debug mode is active or inactive
 
 // Add a character to the initiative list
 async function addChar(currchan, name, roll) {
