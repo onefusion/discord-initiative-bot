@@ -67,14 +67,10 @@ async function addChar(currchan, name, roll) {
 // Search record for currchan
 async function findChannel(currchan) {
     
-    try {
-        let record = await Record.findOne({channel: currchan})
-        debugmsg(record)
-    } catch (err) {
-        debugmsg(err);
-    }
-
-    /*if (record === null) {
+    let record = await Record.findOne({channel: currchan})
+    debugmsg(record)
+    
+    if (record === null) {
         debugmsg('channel not found')
         return null;
     }
@@ -86,7 +82,7 @@ async function findChannel(currchan) {
         else {
             return null;
         }
-    }*/
+    }
 }
 
 function debugmsg(msg) {
