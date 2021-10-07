@@ -91,8 +91,8 @@ function toggleDebug() {
 
 addChar(1001, 'xzee', '3.2.1');
 addChar(1001, 'skye', '3.0');
-//addChar(1001, 'zakar', '3.1.1');
+addChar(1001, 'zakar', '3.1.1');
 addChar(1002, 'xzee', '1.2.3');
-//addChar(1001, 'jannik', '4.0.1');
-//addChar(1002, 'skye', '1.1.2');
+addChar(1001, 'jannik', '4.0.1');
+addChar(1002, 'skye', '1.1.2');
 
