@@ -33,7 +33,7 @@ async function addChar(currchan, name, roll) {
           ------------------------------------------------------------------------------------------------------------------*/
           
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
-        let record = await db.collection('Record').findOne({channel: currchan})
+        let record = await Record.findOne({channel: currchan})
         debugmsg(record)
         /*      ------------------------------------------------------------------------------------------------------------------
             Also, the next step before just pushing the character should be to check the existing table to see if it has 
