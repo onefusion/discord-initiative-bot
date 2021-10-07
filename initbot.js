@@ -82,7 +82,7 @@ function debugmsg(msg) {
     }
 }
 
-debug = true;
+let debug = true;
 addChar(1001, 'xzee', '3.2.1');
 addChar(1001, 'skye', '3.0');
 //addChar(1001, 'zakar', '3.1.1');
