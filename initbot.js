@@ -34,6 +34,7 @@ async function addChar(currchan, name, roll) {
           
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
         let record = await Record.findOne({channel: currchan})
+        debugmsg('addChar if record is in db statement')
         debugmsg(record)
         /*      ------------------------------------------------------------------------------------------------------------------
             Also, the next step before just pushing the character should be to check the existing table to see if it has 
@@ -43,7 +44,9 @@ async function addChar(currchan, name, roll) {
         if (record.initiative.name == name) {
             // update character's roll
             record.initiative.roll = roll
-            debugmsg(record)
+            debugmsg('addChar if record is found in db, and record.initiative.name is same as name')
+            debugmsg(record.initiative.roll)
+            debugmsg(roll)
         }
         else {  // sets char object to name and roll
             let char = {
@@ -53,6 +56,8 @@ async function addChar(currchan, name, roll) {
 
             // push char to record
             record.initiative.push(char)
+            debugmsg(record.initiative)
+            debugmsg(char)
             debugmsg(record)
         }
 
@@ -71,16 +76,17 @@ async function findChannel(currchan) {
     debugmsg(record)
     
     if (record === null) {
-        debugmsg('channel not found')
+        debugmsg('channel not found (if record is null)')
         return null;
     }
     else {
         if (record.channel == currchan) {
-            debugmsg('channel found')
+            debugmsg('channel found and is currchan')
             return record
         }
         else {
             debugmsg(record.channel)
+            debugmsg('channel found but not currchan?')
             return record
         }
     }
