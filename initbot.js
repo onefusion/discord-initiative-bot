@@ -78,7 +78,7 @@ async function findChannel(currchan) {
     if (record === null) {
         debugmsg('channel not found (if record is null)')
         debugmsg('record is undefined')
-        return null;
+        return record
     }
     else {
         if (record.channel == currchan) {
