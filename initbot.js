@@ -19,7 +19,7 @@ async function addChar(currchan, name, roll) {
             We'd want to be sure the channel record exists no matter which command is first. 
           ------------------------------------------------------------------------------------------------------------------*/
     let foundChan = await findChannel(currchan)
-          debugmsg(findChannel(currchan))
+          debugmsg('addChar: foundChan is '+foundChan)
     if (!foundChan) {
         let newRecord = new Record({
             channel: currchan,
@@ -77,7 +77,6 @@ async function findChannel(currchan) {
     if (record === null) {
 
         debugmsg('findChannel: channel not found (if record is null)')
-        debugmsg('findChannel: record is undefined')
         return undefined;
         
     }
