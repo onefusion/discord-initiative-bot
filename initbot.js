@@ -12,15 +12,10 @@ let debug = true; //Set if debug mode is active or inactive
 async function addChar(currchan, name, roll) {
     
     // if current channel not found in db collection, then create record for channel in db collection
-    /*    ------------------------------------------------------------------------------------------------------------------
-            findChannel
-
-            Would it make sense to move this bit to a bot or channel initialization? 
-            We'd want to be sure the channel record exists no matter which command is first. 
-          ------------------------------------------------------------------------------------------------------------------*/
+    
     let foundChan = await findChannel(currchan)
-          debugmsg('addChar: foundChan is '+foundChan)
-    if (!foundChan) {
+          //debugmsg('addChar: foundChan is '+foundChan)
+    if (foundChan === undefined) {
         let newRecord = new Record({
             channel: currchan,
             initiative: [{name: name, roll: roll}]
@@ -28,19 +23,19 @@ async function addChar(currchan, name, roll) {
         debugmsg('addChar: findChannel made a new record')
 
         await newRecord.save(function (err, doc){
-            if (err) console.error('newRecord.save' + err)
-                debugmsg('addChar: ' + doc)
-        })       
-    /*    ------------------------------------------------------------------------------------------------------------------
-            If we move the above bit to a separate function for initialization, we don't need this wrapped in an else
-          ------------------------------------------------------------------------------------------------------------------*/
+            if (err) console.error('newRecord.save err: ' + err)
+                //debugmsg('addChar err: ' + doc)
+        }) 
+        debugmsg('newRecord save completed')      
+    
           
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
         let record = await Record.findOne({channel: currchan})
         debugmsg('addChar: addChar if record is in db statement')
-        debugmsg('addChar: ' + record)
-        debugmsg('addChar: record.init '+record.initiative)
+        //debugmsg('addChar: ' + record)
+        //debugmsg('addChar: record.init '+record.initiative)
 
+        
         if (record.initiative.name == name) {
             // update character's roll
             record.initiative.roll = roll
@@ -56,15 +51,15 @@ async function addChar(currchan, name, roll) {
 
             // push char to record
             record.initiative.push(char)
-            debugmsg('addChar; record initiative: ' +record.initiative)
-            debugmsg('addChar; record initiative: ' +char)
-            debugmsg('addChar; record initiative: ' +record)
+            //debugmsg('addChar; record initiative: ' +record.initiative)
+            //debugmsg('addChar; record initiative: ' +char)
+            //debugmsg('addChar; record initiative: ' +record)
         }
 
         // and then save the updated record
         await record.save(function (err, doc){
             if (err) console.error('record.save:' ,err)
-            debugmsg('addChar; record save: ' ,doc)
+            //debugmsg('addChar; record save doc: ' ,doc)
         })    
     }    
 }
@@ -73,7 +68,7 @@ async function addChar(currchan, name, roll) {
 async function findChannel(currchan) {
     
     let record = await Record.findOne({channel: currchan}).exec()
-    debugmsg('findChannel; record.findOne: ' + record)
+    //debugmsg('findChannel; record.findOne: ' + record)
     
     if (record === null) {
 
@@ -106,10 +101,23 @@ function toggleDebug() {
     debug = debug ? false : true;
 }
 
-addChar(1001, 'xzee', '3.2.1');
-addChar(1001, 'skye', '3.0');
-addChar(1001, 'zakar', '3.1.1');
-addChar(1002, 'xzee', '1.2.3');
-addChar(1001, 'jannik', '4.0.1');
-addChar(1002, 'skye', '1.1.2');
 
+async function testData() {
+
+await addChar(1001, 'xzee', '3.2.1');
+debugmsg('Xzee added in 1001');
+await addChar(1001, 'xzee', '6.5.1');
+debugmsg('Xzee added in 1001');
+await addChar(1001, 'skye', '3.0');
+debugmsg('Skye added in 1001');
+await addChar(1001, 'zakar', '3.1.1');
+debugmsg('Zakar added in 1001');
+await addChar(1002, 'xzee', '1.2.3');
+debugmsg('Xzee added in 1002');
+await addChar(1001, 'jannik', '4.0.1');
+debugmsg('Jannik added in 1001');
+await addChar(1002, 'skye', '1.1.2');
+debugmsg('Skye added in 1002');
+}
+
+testData()
