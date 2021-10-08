@@ -18,8 +18,9 @@ async function addChar(currchan, name, roll) {
             Would it make sense to move this bit to a bot or channel initialization? 
             We'd want to be sure the channel record exists no matter which command is first. 
           ------------------------------------------------------------------------------------------------------------------*/
-    debugmsg(findChannel(currchan))
-    if (findChannel(currchan) == '1') {
+    let foundChan = await findChannel(currchan)
+          debugmsg(findChannel(currchan))
+    if (!foundChan) {
         let newRecord = new Record({
             channel: currchan,
             initiative: [{name: name, roll: roll}]
@@ -78,7 +79,7 @@ async function findChannel(currchan) {
     
     if (record === null) {
         debugmsg('channel not found (if record is null)')
-        return '1'
+        return record
     }
     else {
         if (record.channel == currchan) {
