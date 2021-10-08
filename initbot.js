@@ -74,7 +74,7 @@ async function addChar(currchan, name, roll) {
 // Search record for currchan
 async function findChannel(currchan) {
     
-    let record = await Record.findOne({channel: currchan}).exec()
+    let record = await Record.findOne({channel: currchan})
     debugmsg(record)
     
     if (record === null) {
