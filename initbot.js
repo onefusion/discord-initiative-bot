@@ -80,11 +80,13 @@ async function findChannel(currchan) {
             return record
         }
         else {
-            return null;
+            debugmsg(record.channel)
+            return record
         }
     }
 }
 
+//This function checks if debug mode is enabled (true)
 function debugmsg(msg) {
     if (debug) {
         console.log(msg)
