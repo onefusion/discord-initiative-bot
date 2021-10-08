@@ -25,30 +25,27 @@ async function addChar(currchan, name, roll) {
             channel: currchan,
             initiative: [{name: name, roll: roll}]
         })
+        debugmsg('addChar: findChannel made a new record')
 
         await newRecord.save(function (err, doc){
-            if (err) console.error(err)
-                debugmsg(doc)
+            if (err) console.error('newRecord.save' + err)
+                debugmsg('addChar: ' + doc)
         })       
     /*    ------------------------------------------------------------------------------------------------------------------
-            If we move the above bit to a separate function for initiativeialization, we don't need this wrapped in an else
+            If we move the above bit to a separate function for initialization, we don't need this wrapped in an else
           ------------------------------------------------------------------------------------------------------------------*/
           
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
         let record = await Record.findOne({channel: currchan})
-        debugmsg('addChar if record is in db statement')
-        debugmsg(record)
-        /*      ------------------------------------------------------------------------------------------------------------------
-            Also, the next step before just pushing the character should be to check the existing table to see if it has 
-                the character already. If it already has the character, do we give a message to say that character is already 
-                in the list, and the update command should be used? 
-            ------------------------------------------------------------------------------------------------------------------*/
+        debugmsg('addChar: addChar if record is in db statement')
+        debugmsg('addChar: ' + record)
+        
         if (record.initiative.name == name) {
             // update character's roll
             record.initiative.roll = roll
-            debugmsg('addChar if record is found in db, and record.initiative.name is same as name')
-            debugmsg(record.initiative.roll)
-            debugmsg(roll)
+            debugmsg('addChar; record initiative: : addChar if record is found in db, and record.initiative.name is same as name')
+            debugmsg('addChar; record initiative: : ' +record.initiative.roll)
+            debugmsg('addChar; record initiative: : ' +roll)
         }
         else {  // sets char object to name and roll
             let char = {
@@ -58,15 +55,15 @@ async function addChar(currchan, name, roll) {
 
             // push char to record
             record.initiative.push(char)
-            debugmsg(record.initiative)
-            debugmsg(char)
-            debugmsg(record)
+            debugmsg('addChar; record initiative: ' +record.initiative)
+            debugmsg('addChar; record initiative: ' +char)
+            debugmsg('addChar; record initiative: ' +record)
         }
 
         // and then save the updated record
         await record.save(function (err, doc){
-            if (err) console.error(err)
-            debugmsg(doc)
+            if (err) console.error('record.save:' . err)
+            debugmsg('addChar; record save: ' .doc)
         })    
     }    
 }
@@ -74,21 +71,29 @@ async function addChar(currchan, name, roll) {
 // Search record for currchan
 async function findChannel(currchan) {
     
+<<<<<<< HEAD
     let record = await Record.findOne({channel: currchan})
     debugmsg(record)
+=======
+    let record = await Record.findOne({channel: currchan}).exec()
+    debugmsg('findChannel; record.findOne: ' + record)
+>>>>>>> 96e403e5e03ae19d2b91a7d5be0fb589114e0e79
     
     if (record === null) {
-        debugmsg('channel not found (if record is null)')
-        return record
+
+        debugmsg('findChannel: channel not found (if record is null)')
+        debugmsg('findChannel: record is undefined')
+        return undefined;
+        
     }
     else {
         if (record.channel == currchan) {
-            debugmsg('channel found and is currchan')
+            debugmsg('findChannel: channel found and is currchan')
             return record
         }
         else {
-            debugmsg(record.channel)
-            debugmsg('channel found but not currchan?')
+            debugmsg('findChannel: ' + record.channel)
+            debugmsg('findChannel: channel found but not currchan?')
             return record
         }
     }
