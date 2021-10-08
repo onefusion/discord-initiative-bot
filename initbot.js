@@ -75,10 +75,10 @@ async function findChannel(currchan) {
     let record = await Record.findOne({channel: currchan})
     debugmsg(record)
     
-    if (record === undefined) {
+    if (record === null) {
         debugmsg('channel not found (if record is null)')
         debugmsg('record is undefined')
-        return undefined;
+        return null;
     }
     else {
         if (record.channel == currchan) {
