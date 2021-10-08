@@ -39,7 +39,8 @@ async function addChar(currchan, name, roll) {
         let record = await Record.findOne({channel: currchan})
         debugmsg('addChar: addChar if record is in db statement')
         debugmsg('addChar: ' + record)
-        
+        debugmsg('addChar: record.init '+record.initiative)
+
         if (record.initiative.name == name) {
             // update character's roll
             record.initiative.roll = roll
