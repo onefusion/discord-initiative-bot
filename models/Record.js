@@ -1,9 +1,11 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-
-let recordSchema = new Schema({
-    channel: { type: String, required: true, index: true },
-    initiative: { }
+const recordSchema = new mongoose.Schema({
+    channel: {  type: String, 
+                required: true, 
+                index: true },
+    initiative: {
+        name: { type: String, lowercase: true }, 
+        roll: String},
 })
 
 module.exports = mongoose.model('Record', recordSchema)

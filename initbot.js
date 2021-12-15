@@ -16,74 +16,81 @@ async function addChar(currchan, name, roll) {
     let foundChan = await findChannel(currchan)
           debugmsg('addChar: foundChan is ' + foundChan)
     if (!foundChan) {
-        let newRecord = new Record({
+        let newRecord = await new Record({
             channel: currchan,
-            initiative: {name: name, roll: roll}
+            initiative: {name: name, roll: roll},
         })
-        debugmsg('addChar: findChannel made a new record')
+        debugmsg('addChar: findChannel preparing new record')
 
         await newRecord.save(function (err, doc){
             if (err) console.error('newRecord.save err: ' + err)
-                //debugmsg('addChar err: ' + doc)
+                debugmsg('addChar err: ' + doc)
         }) 
-        debugmsg('newRecord save completed')      
-    
-          
+        debugmsg('newRecord save completed: ' + newRecord)             
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
-        await Record.findOne({channel: currchan})
+        let record = await Record.findOne({channel: currchan}).exec()
         debugmsg('addChar: addChar if record is in db statement')
         //debugmsg('addChar: ' + await Record.findOne({channel: currchan}))
-        debugmsg('addChar: record.init ' + await Record.findOne([{channel: currchan}],[{channel: currchan}.$initiative]))
+        debugmsg('addChar: init to add: name ' + name + ', roll ' + roll)
+        
+        // convert record's initiative object to key's array
+        const keys = Object.keys(record.initiative)
+        debugmsg('Keys array: '+keys)
 
-        if (await Record.findOne([{channel: currchan}], currchan.initiative.name == name)) {
-            // update character's roll
-            await Record.findOneAndUpdate([{channel: currchan}, currchan.initiative.name == name],[{channel: currchan}, currchan.initiative.roll = roll])
-            debugmsg('addChar; record initiative: : addChar if record is found in db, and record.initiative.name is same as name')
-            debugmsg('addChar; record initiative: : ' + Record.find([{channel: currchan}], currchan.initiative))
-            debugmsg('addChar; record initiative: : ' + roll)
-        }
-        else {  // sets char object to name and roll
-            let char = {
-                'name': name,
-                'roll': roll
-            }
+        keys.forEach((key,index) => {
+            debugmsg(`${key}: ${record.initiative[key]}`)
 
-            // push char to record
-            Record.findOneAndUpdate({channel: currchan}, [{channel: currchan}, currchan.initiative.push(char)]).exec()
-            debugmsg('addChar; record initiative: ' + Record.findOne([{channel: currchan}], currchan.initiative))
-            debugmsg('addChar; record initiative: ' + char)
-            //debugmsg('addChar; record initiative: ' + Record.findOne({channel: currchan}).exec())
-        }
+            if (record.initiative[key] == name) {
+                    // update character's roll
+                    record.initiative[key] = roll
+                    debugmsg('addChar; record initiative: : addChar if record is found in db, and record.initiative.name is same as name')
+                    debugmsg('addChar; record initiative added: name: ' + name + ', roll: ' + roll)
+                    debugmsg('addChar; record initiative updated: ' + record.initiative)
+                }
+            else {  // sets char object to name and roll
+                let char = {
+                    'name': name,
+                    'roll': roll,
+                }
 
-        // and then save the updated record
-        await Record.save(function (err, doc){
-            if (err) console.error('record.save:' ,err)
-            //debugmsg('addChar; record save doc: ' ,doc)
-        })    
+                // push char to record
+                record.initiative.push(char)
+                debugmsg('addChar; record initiative: ' + record.initiative)
+                debugmsg('addChar; record initiative: adding char ' + char)
+                //debugmsg('addChar; record initiative: ' + Record.findOne({channel: currchan}).exec())
+            } 
+
+            // and then save the updated record
+            record.save(function (err, doc){
+                if (err) console.error('record.save: ' ,err)
+                debugmsg('addChar; record save doc: ' ,doc)
+            })
+    })   
     }    
 }
 
 // Search record for currchan
 async function findChannel(currchan) {
     
-    Record.findOne({channel: currchan}).exec()
-    debugmsg('findChannel; record.findOne: ' + Record.findOne({channel: currchan}).exec())
+    let record = await Record.findOne({channel: currchan}).exec()
+    debugmsg('findChannel; record.findOne: ' + record)
     
-    if (Record.findOne({channel:currchan}).exec() === null) {
+    if (record === null) {
 
         debugmsg('findChannel: channel not found (record is null)')
-        return undefined;
+        return null;
         
     }
     else {
-        if (Record.findOne({channel: currchan}).exec() == currchan) {
+        if (record.channel == currchan) {
             debugmsg('findChannel: channel found and is currchan')
-            return (Record.findOne({channel: currchan}).exec())
+            debugmsg('findChannel: channel '+record.channel)
+            return record
         }
         else {
-            debugmsg('findChannel: ' + Record.findOne({channel: currchan}).exec())
+            debugmsg('findChannel: ' + record.channel)
             debugmsg('findChannel: channel found but not currchan?')
-            return (Record.findOne({channel: currchan}).exec())
+            return record
         }
     }
 }
@@ -100,30 +107,9 @@ function toggleDebug() {
     debug = debug ? false : true;
 }
 
-/*async function addNewChannel(currchan, name, roll) {
-    let record = await Record.findOne({channel: currchan}).exec()
-    debugmsg('Searching for channel...' + currchan);
-
-    if (Record.findOne({channel: currchan}).exec() === null) {
-        let newRecord = new Record({
-            channel: currchan,
-            initiative: [{name: name, roll: roll}]
-        })
-        debugmsg('addChar: findChannel made a new record for channel ' + currchan)
-
-        await newRecord.save(function (err, doc){
-            if (err) console.error('newRecord.save' + err)
-                //debugmsg('addChar: ' + doc)
-        })
-    }
-    else {
-        debugmsg('Channel ' + record.channel + ' found.')
-    }
-}*/
-
-addChar(10, 'xzee', '3.2.1');
-addChar(11, 'skye', '3.0');
-addChar(12, 'zakar', '3.1.1');
-addChar(12, 'xzee', '1.2.3');
-addChar(11, 'jannik', '4.0.1');
-addChar(12, 'skye', '1.1.2');
+addChar(10, 'Xzee', '3.2.1');
+addChar(10, 'Skye', '3.0');
+//addChar(10, 'Zakar', '3.1.1');
+//addChar(11, 'Xzee', '1.2.3');
+//addChar(11, 'Jannik', '4.0.1');
+//addChar(11, 'Skye', '1.1.2');
