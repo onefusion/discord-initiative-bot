@@ -4,7 +4,7 @@ let mongoose = require('mongoose');
 const db = require('./database.js');
 const Record = require('./models/Record');
 
-const client = new Discord.Client();
+//const client = new Discord.Client();
 
 let debug = true; //Set if debug mode is active or inactive
 
@@ -19,11 +19,11 @@ async function addChar(currchan, name, roll) {
             We'd want to be sure the channel record exists no matter which command is first. 
           ------------------------------------------------------------------------------------------------------------------*/
     let foundChan = await findChannel(currchan)
-          debugmsg('addChar: foundChan is '+foundChan)
+          debugmsg('addChar: foundChan is ' + foundChan)
     if (!foundChan) {
         let newRecord = new Record({
             channel: currchan,
-            initiative: [{name: name, roll: roll}]
+            initiative: {name: name, roll: roll}
         })
         debugmsg('addChar: findChannel made a new record')
 
@@ -36,17 +36,17 @@ async function addChar(currchan, name, roll) {
           ------------------------------------------------------------------------------------------------------------------*/
           
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
-        let record = await Record.findOne({channel: currchan})
+        await Record.findOne({channel: currchan})
         debugmsg('addChar: addChar if record is in db statement')
-        debugmsg('addChar: ' + record)
-        debugmsg('addChar: record.init '+record.initiative)
+        //debugmsg('addChar: ' + await Record.findOne({channel: currchan}))
+        debugmsg('addChar: record.init ' + await Record.findOne([{channel: currchan}],[{channel: currchan}.$initiative]))
 
-        if (record.initiative.name == name) {
+        if (await Record.findOne([{channel: currchan}], currchan.initiative.name == name)) {
             // update character's roll
-            record.initiative.roll = roll
+            await Record.findOneAndUpdate([{channel: currchan}, currchan.initiative.name == name],[{channel: currchan}, currchan.initiative.roll = roll])
             debugmsg('addChar; record initiative: : addChar if record is found in db, and record.initiative.name is same as name')
-            debugmsg('addChar; record initiative: : ' +record.initiative.roll)
-            debugmsg('addChar; record initiative: : ' +roll)
+            debugmsg('addChar; record initiative: : ' + Record.find([{channel: currchan}], currchan.initiative))
+            debugmsg('addChar; record initiative: : ' + roll)
         }
         else {  // sets char object to name and roll
             let char = {
@@ -55,14 +55,14 @@ async function addChar(currchan, name, roll) {
             }
 
             // push char to record
-            record.initiative.push(char)
-            debugmsg('addChar; record initiative: ' +record.initiative)
-            debugmsg('addChar; record initiative: ' +char)
-            debugmsg('addChar; record initiative: ' +record)
+            Record.findOneAndUpdate({channel: currchan}, [{channel: currchan}, currchan.initiative.push(char)]).exec()
+            debugmsg('addChar; record initiative: ' + Record.findOne([{channel: currchan}], currchan.initiative))
+            debugmsg('addChar; record initiative: ' + char)
+            //debugmsg('addChar; record initiative: ' + Record.findOne({channel: currchan}).exec())
         }
 
         // and then save the updated record
-        await record.save(function (err, doc){
+        await Record.save(function (err, doc){
             if (err) console.error('record.save:' ,err)
             debugmsg('addChar; record save: ' ,doc)
         })    
@@ -72,24 +72,24 @@ async function addChar(currchan, name, roll) {
 // Search record for currchan
 async function findChannel(currchan) {
     
-    let record = await Record.findOne({channel: currchan}).exec()
-    debugmsg('findChannel; record.findOne: ' + record)
+    Record.findOne({channel: currchan}).exec()
+    debugmsg('findChannel; record.findOne: ' + Record.findOne({channel: currchan}).exec())
     
-    if (record === null) {
+    if (Record.findOne({channel:currchan}).exec() === null) {
 
-        debugmsg('findChannel: channel not found (if record is null)')
+        debugmsg('findChannel: channel not found (record is null)')
         return undefined;
         
     }
     else {
-        if (record.channel == currchan) {
+        if (Record.findOne({channel: currchan}).exec() == currchan) {
             debugmsg('findChannel: channel found and is currchan')
-            return record
+            return (Record.findOne({channel: currchan}).exec())
         }
         else {
-            debugmsg('findChannel: ' + record.channel)
+            debugmsg('findChannel: ' + Record.findOne({channel: currchan}).exec())
             debugmsg('findChannel: channel found but not currchan?')
-            return record
+            return (Record.findOne({channel: currchan}).exec())
         }
     }
 }
@@ -106,10 +106,30 @@ function toggleDebug() {
     debug = debug ? false : true;
 }
 
-addChar(1001, 'xzee', '3.2.1');
-addChar(1001, 'skye', '3.0');
-addChar(1001, 'zakar', '3.1.1');
-addChar(1002, 'xzee', '1.2.3');
-addChar(1001, 'jannik', '4.0.1');
-addChar(1002, 'skye', '1.1.2');
+/*async function addNewChannel(currchan, name, roll) {
+    let record = await Record.findOne({channel: currchan}).exec()
+    debugmsg('Searching for channel...' + currchan);
 
+    if (Record.findOne({channel: currchan}).exec() === null) {
+        let newRecord = new Record({
+            channel: currchan,
+            initiative: [{name: name, roll: roll}]
+        })
+        debugmsg('addChar: findChannel made a new record for channel ' + currchan)
+
+        await newRecord.save(function (err, doc){
+            if (err) console.error('newRecord.save' + err)
+                //debugmsg('addChar: ' + doc)
+        })
+    }
+    else {
+        debugmsg('Channel ' + record.channel + ' found.')
+    }
+}*/
+
+addChar(10, 'xzee', '3.2.1');
+addChar(11, 'skye', '3.0');
+addChar(12, 'zakar', '3.1.1');
+addChar(12, 'xzee', '1.2.3');
+addChar(11, 'jannik', '4.0.1');
+addChar(12, 'skye', '1.1.2');

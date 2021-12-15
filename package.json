@@ -6,7 +6,8 @@
   "author": "seanr",
   "dependencies": {
     "discord.js": "^11.4.0",
-    "mongoose": "^6.0.9"
+    "mongoose": "^6.0.9",
+    "nodemon": "^2.0.15"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
