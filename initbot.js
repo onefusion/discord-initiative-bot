@@ -12,12 +12,7 @@ let debug = true; //Set if debug mode is active or inactive
 async function addChar(currchan, name, roll) {
     
     // if current channel not found in db collection, then create record for channel in db collection
-    /*    ------------------------------------------------------------------------------------------------------------------
-            findChannel
-
-            Would it make sense to move this bit to a bot or channel initialization? 
-            We'd want to be sure the channel record exists no matter which command is first. 
-          ------------------------------------------------------------------------------------------------------------------*/
+    
     let foundChan = await findChannel(currchan)
           debugmsg('addChar: foundChan is ' + foundChan)
     if (!foundChan) {
@@ -28,12 +23,11 @@ async function addChar(currchan, name, roll) {
         debugmsg('addChar: findChannel made a new record')
 
         await newRecord.save(function (err, doc){
-            if (err) console.error('newRecord.save' + err)
-                debugmsg('addChar: ' + doc)
-        })       
-    /*    ------------------------------------------------------------------------------------------------------------------
-            If we move the above bit to a separate function for initialization, we don't need this wrapped in an else
-          ------------------------------------------------------------------------------------------------------------------*/
+            if (err) console.error('newRecord.save err: ' + err)
+                //debugmsg('addChar err: ' + doc)
+        }) 
+        debugmsg('newRecord save completed')      
+    
           
     } else { // current channel is found in db collection -- pull record and set initiative to initiative_table
         await Record.findOne({channel: currchan})
@@ -64,7 +58,7 @@ async function addChar(currchan, name, roll) {
         // and then save the updated record
         await Record.save(function (err, doc){
             if (err) console.error('record.save:' ,err)
-            debugmsg('addChar; record save: ' ,doc)
+            //debugmsg('addChar; record save doc: ' ,doc)
         })    
     }    
 }
