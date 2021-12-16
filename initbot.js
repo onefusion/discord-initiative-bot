@@ -35,7 +35,7 @@ async function addToInitiative(currchan, name, roll) {
     else { 
             
         // check for record matching currchan and name
-        record = await findChar(currchan, name, roll)
+        record = await findChar(currchan, name)
             
         // if record was not found matching currchan and name, then create a new record
         if (!record) {
@@ -69,9 +69,9 @@ async function addToInitiative(currchan, name, roll) {
 async function findChannel(currchan) {
     
     // set record to result of findOne matching channel to currchan
-    let record = await Record.findOne({channel: currchan}).exec()
+    let record = await Record.find({channel: currchan}).exec()
     debugmsg('findChannel: searching for channel ' + currchan)
-    debugmsg('findChannel: record.findOne: ' + record)
+    debugmsg('findChannel: record.find: ' + record)
     
     // in mongoose or mongodb, if the findOne does not find a match it will return null, so is record null?
     if (record === null) {
@@ -79,7 +79,7 @@ async function findChannel(currchan) {
         debugmsg('findChannel: channel not found (record is null)')
         
         // pass null to next function so it can know record does not exist for currchan value
-        return null;
+        return null
         
     }
     
@@ -89,23 +89,14 @@ async function findChannel(currchan) {
         // record is not null, but is the found record's channel equal to currchan?
         // return the record found either way
         // note: this if/else is not necessary, but we wanted to include for logging purposes in case it bugs unexpectedly
-        if (record.channel == currchan) {
-            debugmsg('findChannel: channel found and is currchan')
-            debugmsg('findChannel: channel '+record.channel)
-            return record
-        }
-        else {
-            debugmsg('findChannel: ' + record.channel)
-            debugmsg('findChannel: channel found but not currchan?')
-            return record
-        }
+        return record
     }
 }
 
 // This function searches for channel and character name
 async function findChar(currchan, name) {
 
-    let record = await findOne({channel: currchan}, {name: name})
+    let record = await Record.findOne({channel: currchan, name: name})
     debugmsg('findChar: ' + record)
     return record
 
@@ -165,9 +156,9 @@ function toggleDebug() {
 
 }
 
-addToInitiative(10, 'Xzee', '2.1.0');
-addToInitiative(10, 'Skye', '2.0');
-addToInitiative(10, 'Zakar', '2.1.1');
-addToInitiative(11, 'Xzee', '1.1');
-addToInitiative(11, 'Jannik', '1.0.1');
-addToInitiative(11, 'Skye', '1.1.1');
+addToInitiative(10, 'Xzee', '1.0');
+addToInitiative(10, 'Skye', '1.1');
+addToInitiative(10, 'Zakar', '1.2');
+addToInitiative(11, 'Xzee', '3.0');
+addToInitiative(11, 'Jannik', '3.1');
+addToInitiative(11, 'Skye', '3.2');
