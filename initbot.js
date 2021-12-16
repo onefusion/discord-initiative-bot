@@ -5,7 +5,7 @@ const db = require('./database.js');
 const Record = require('./models/Record');
 const { findOne } = require('./models/Record');
 
-//const client = new Discord.Client();
+// const client = new Discord.Client();
 
 let debug = true; //Set if debug mode is active or inactive
 global.record = {};
@@ -19,6 +19,8 @@ async function addToInitiative(currchan, name, roll) {
     // run findChannel function passing currchan variable
     let foundChan = await findChannel(currchan)
     debugmsg('addToInitiative: foundChan is ' + foundChan)
+
+    let record = {}
     
     // if current channel not found in db collection, then create record for channel in db collection
     if (!foundChan) {
@@ -54,9 +56,11 @@ async function addToInitiative(currchan, name, roll) {
         }
     }
     
-    // and then save the record
+    // save the record
     debugmsg('addToInitiative: save record')
     let save = await saveRecord(record)
+
+    return debugmsg('addToInitiative: complete')
     
 }   
     
