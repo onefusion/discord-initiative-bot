@@ -5,6 +5,7 @@
   "main": "bot.js",
   "author": "seanr",
   "dependencies": {
+    "@supercharge/collections": "^3.2.1",
     "discord.js": "^11.4.0",
     "mongoose": "^6.0.9",
     "nodemon": "^2.0.15"
