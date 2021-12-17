@@ -69,28 +69,50 @@ async function addToInitiative(currchan, name, roll) {
 async function findChannel(currchan) {
     
     // set record to result of findOne matching channel to currchan
-    let record = await Record.find({channel: currchan}).exec()
     debugmsg('findChannel: searching for channel ' + currchan)
-    debugmsg('findChannel: record.find: ' + record)
-    
+    let record = await Record.find({channel: currchan}).exec()
+        
     // in mongoose or mongodb, if the findOne does not find a match it will return null, so is record null?
     if (record === null) {
 
-        debugmsg('findChannel: channel not found (record is null)')
-        
         // pass null to next function so it can know record does not exist for currchan value
+        debugmsg('findChannel: channel not found (record is null)')
         return null
         
     }
     
-    // if record found, then record is not null
+    // if record found, then record is not null and return record
     else {
         
-        // record is not null, but is the found record's channel equal to currchan?
-        // return the record found either way
-        // note: this if/else is not necessary, but we wanted to include for logging purposes in case it bugs unexpectedly
+        // record(s) found matching currchan, so debugmsg and return record(s)
+        debugmsg('findChannel: record(s) found with channel ' + currchan)
         return record
     }
+}
+
+// Search record for currchan but only return names and rolls
+async function findChanwithNamesandRolls(currchan) {
+
+    //set record to result of findOne matching channel to currchan, but with only names and rolls only
+    debugmsg('findChanwithNamesandRolls: searching for channel ' + currchan)
+    let record = await Record.find({channel: currchan}, {"name" : 1, "roll" : 1, "_id": 0})
+
+    if (record === null) {
+
+        //pass null to next function so it can know record does not exist for currchan value
+        debugmsg('findChanwithNamesandRolls: channel not found (record is null)')
+        return null
+
+    }
+
+    // return record and debugmsg
+    else {
+
+        debugmsg('findChanwithNamesandRolls: record(s) found with channel ' + currchan)
+        return record
+        
+    }
+
 }
 
 // This function searches for channel and character name
@@ -137,6 +159,25 @@ async function setRoll(record, roll) {
     // return updated record
     debugmsg('setRoll: record updated to ' + record)
     return record
+
+}
+
+// This function sorts the returned records (name and roll) into an initiative order
+function sortInitiative(currchan) {
+
+    /* @TODO 
+        operations:
+        initialize a new initiative array
+        call function to pull records matching currchan, but only return name and roll for each record (find)
+        split roll to suc, adv, tri
+        then compare via nested ifs and elseifs
+        then push into new sortedInitiative array
+        return sortedInitiative
+    */
+
+    let sortedInitiative = {}
+    
+    let namesAndRolls = findChannelwithNamesandRolls
 
 }
 
