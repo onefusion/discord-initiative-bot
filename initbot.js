@@ -17,7 +17,7 @@ global.record = {};
 async function addToInitiative(currchan, name, roll) {
     
     // run findChannel function passing currchan variable
-    let foundChan = await findChannel(currchan)
+    let foundChan = await findChannel(currchan, 'addToInitiative')
     debugmsg('addToInitiative: foundChan is ' + foundChan)
 
     let record = {}
@@ -64,55 +64,59 @@ async function addToInitiative(currchan, name, roll) {
     
 }   
     
-
 // Search record for currchan
-async function findChannel(currchan) {
+async function findChannel(currchan, func) {
     
-    // set record to result of findOne matching channel to currchan
-    debugmsg('findChannel: searching for channel ' + currchan)
-    let record = await Record.find({channel: currchan}).exec()
-        
-    // in mongoose or mongodb, if the findOne does not find a match it will return null, so is record null?
-    if (record === null) {
-
-        // pass null to next function so it can know record does not exist for currchan value
-        debugmsg('findChannel: channel not found (record is null)')
-        return null
-        
-    }
+    let callerFunc = func
     
-    // if record found, then record is not null and return record
-    else {
+    // is the function that called findChannel addToInitiative?
+    if (callerFunc = "addToInitiative") {
+    
+        // set record to result of findOne matching channel to currchan
+        debugmsg('findChannel: searching for channel ' + currchan)
+        let record = await Record.find({channel: currchan}).exec()
+            
+        // in mongoose or mongodb, if the findOne does not find a match it will return null, so is record null?
+        if (record === null) {
+
+            // pass null to next function so it can know record does not exist for currchan value
+            debugmsg('findChannel: channel not found (record is null)')
+            return null
+            
+        }
         
-        // record(s) found matching currchan, so debugmsg and return record(s)
-        debugmsg('findChannel: record(s) found with channel ' + currchan)
-        return record
-    }
-}
-
-// Search record for currchan but only return names and rolls
-async function findChanwithNamesandRolls(currchan) {
-
-    //set record to result of findOne matching channel to currchan, but with only names and rolls only
-    debugmsg('findChanwithNamesandRolls: searching for channel ' + currchan)
-    let record = await Record.find({channel: currchan}, {"name" : 1, "roll" : 1, "_id": 0})
-
-    if (record === null) {
-
-        //pass null to next function so it can know record does not exist for currchan value
-        debugmsg('findChanwithNamesandRolls: channel not found (record is null)')
-        return null
-
+        // if record found, then record is not null and return record
+        else {
+            
+            // record(s) found matching currchan, so debugmsg and return record(s)
+            debugmsg('findChannel: record(s) found with channel ' + currchan)
+            return record
+        }
     }
 
-    // return record and debugmsg
-    else {
+    // is the function that called findChannel sortInitiative?
+    else if (callerFunc = "sortInitiative") {
 
-        debugmsg('findChanwithNamesandRolls: record(s) found with channel ' + currchan)
-        return record
-        
+        //set record to result of findOne matching channel to currchan, but only with names and rolls
+        debugmsg('findChannel: searching for channel ' + currchan)
+        let record = await Record.find({channel: currchan}, {"name" : 1, "roll" : 1, "_id": 0}).exec()
+
+        if (record === null) {
+
+            //pass null to next function so it can know record does not exist for currchan value
+            debugmsg('findChannel: channel not found (record is null)')
+            return null
+
+        }
+
+        // return record and debugmsg
+        else {
+
+            debugmsg('findChannel: record(s) found with channel ' + currchan)
+            return record
+            
+        }
     }
-
 }
 
 // This function searches for channel and character name
@@ -163,22 +167,86 @@ async function setRoll(record, roll) {
 }
 
 // This function sorts the returned records (name and roll) into an initiative order
-function sortInitiative(currchan) {
-
-    /* @TODO 
-        operations:
-        initialize a new initiative array
-        call function to pull records matching currchan, but only return name and roll for each record (find)
-        split roll to suc, adv, tri
-        then compare via nested ifs and elseifs
-        then push into new sortedInitiative array
-        return sortedInitiative
-    */
+async function sortInitiative(currchan) {
 
     let sortedInitiative = {}
-    
-    let namesAndRolls = findChannelwithNamesandRolls
+    sortedInitiative = await findChannel(currchan, 'sortInitiative')
+    debugmsg('sortInitiative: records to sort: ' + sortedInitiative)
 
+    // if records not found matching channel, debugmsg out
+    if (record === null) {
+
+        debugmsg('sortInitiative: No records found matching channel')
+    }
+
+    // if only one record found, then no need to sort
+    else if (sortedInitiative.length() == 1){
+
+        debugmsg('sortInitiative: Only one character record found')
+        debugmsg('sortInitiative: ' + sortedInitiative)
+    }
+
+    // multiple character records, so perform sort
+    else { 
+
+        // every record returned will have a number of rolls, but we need to split each roll to sort them properly
+        for (roll in sortedInitiative) {
+
+            // split the roll by the '.' character
+            let splitRoll = sortedInitiative.roll.split(".")
+            
+            // set suc to a of 'a.b.c', and make it an integer
+            suc = parseInt(splitRoll[0])
+                
+                // is there b of 'a.b.c'? if not, set adv to 0
+                if (splitRoll[1] === undefined) {
+                    adv = 0
+                } 
+                
+                // otherwise, set adv to b of 'a.b.c'
+                else {
+                    adv = parseInt(splitRoll[1])
+                }
+
+                // is there c of 'a.b.c'? if not, set tri to 0
+                if (splitRoll[2] === undefined) {
+                    tri = 0
+                }
+
+                // otherwise, set tri to c of 'a.b.c'
+                else {
+                    tri = parseInt(splitRoll[2])
+                }
+            
+            // perform sort
+            record.sort((a,b) => {
+
+                // figure out difference between b and a for success, advantage, and triumph
+                var diffSuc = b.suc - a.suc
+                var diffAdv = b.adv - a.adv
+                var diffTri = b.tri - a.tri
+
+                // if the difference in success, advantage, and triumph of the two rolls is 0, then randomize which character is first
+                if (diffSuc == 0 && diffAdv == 0 && diffTri == 0) {
+                    return Math.random() < 0.5 ? -1 : 1;
+                }
+
+                else if (diffAdv == 0) {
+                    return diffTri;
+                } 
+                
+                else if (diffSuc == 0) { 
+                    return diffAdv;
+                } 
+                
+                else if (diffTri == 0) {
+                    return diffSuc;
+                }
+            })
+        }
+
+        debugmsg("sortInitiative: finished sort: " + sortedInitiative)
+    }
 }
 
 //This function checks if debug mode is enabled (true)
@@ -197,9 +265,12 @@ function toggleDebug() {
 
 }
 
-addToInitiative(10, 'Xzee', '1.0');
+addToInitiative(10, 'Xzee', '1.0.1');
 addToInitiative(10, 'Skye', '1.1');
-addToInitiative(10, 'Zakar', '1.2');
-addToInitiative(11, 'Xzee', '3.0');
-addToInitiative(11, 'Jannik', '3.1');
-addToInitiative(11, 'Skye', '3.2');
+addToInitiative(10, 'Zakar', '1.0');
+addToInitiative(11, 'Xzee', '3.1');
+addToInitiative(11, 'Jannik', '3.1.1');
+addToInitiative(11, 'Skye', '3.0');
+
+sortInitiative(10)
+sortInitiative(11)
